@@ -1,0 +1,62 @@
+package com.example.utils;
+
+import com.example.views.BookManagement;
+import com.example.views.BorrowBook;
+import com.example.views.ReturnBook;
+import com.example.views.UserManagement;
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class MainDashboard extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Library Management System");
+
+        Button userManagementButton = new Button("User Management");
+        Button bookManagementButton = new Button("Book Management");
+        Button borrowBookButton = new Button("Borrow Book");
+        Button returnBookButton = new Button("Return Book");
+        Button logoutButton = new Button("Logout");
+
+        userManagementButton.setOnAction(e -> {
+            UserManagement userManagement = new UserManagement();
+            userManagement.display();
+        });
+
+        bookManagementButton.setOnAction(e -> {
+            BookManagement bookManagement = new BookManagement();
+            bookManagement.display();
+        });
+
+        borrowBookButton.setOnAction(e -> {
+            BorrowBook borrowBook = new BorrowBook();
+            borrowBook.display();
+        });
+
+        returnBookButton.setOnAction(e -> {
+            ReturnBook returnBook = new ReturnBook();
+            returnBook.display();
+        });
+
+        logoutButton.setOnAction(e -> {
+            primaryStage.close();
+        });
+
+        VBox layout = new VBox(20);
+        layout.getChildren().addAll(userManagementButton, bookManagementButton, borrowBookButton, returnBookButton,
+                logoutButton);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(layout, 300, 250);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
