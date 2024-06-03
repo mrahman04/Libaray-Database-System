@@ -1,0 +1,81 @@
+package com.example.controllers;
+
+import com.example.models.BorrowRecord;
+import com.example.models.Book;
+import com.example.utils.DataStore;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class BorrowController {
+
+    private List<BorrowRecord> borrowRecords;
+    private List<Book> books;
+
+    public BorrowController() {
+        try {
+            borrowRecords = DataStore.loadBorrowRecords();
+            books = DataStore.loadBooks();
+        } catch (IOException | ClassNotFoundException e) {
+            borrowRecords = new ArrayList<>();
+            books = new ArrayList<>();
+        }
+    }
+
+    public void borrowBook(int userID, int bookID, LocalDate borrowDate, LocalDate dueDate) {
+        for (Book book : books) {
+            if (book.getBookID() == bookID && book.isAvailable()) {
+                book.setAvailable(false);
+                BorrowRecord record = new BorrowRecord(borrowRecords.size() + 1, userID, bookID, borrowDate, dueDate,
+                        null);
+                borrowRecords.add(record);
+                saveBorrowRecords();
+                saveBooks();
+                break;
+            }
+        }
+    }
+
+    public void returnBook(int bookID) {
+        for (BorrowRecord record : borrowRecords) {
+            if (record.getBookID() == bookID && record.getReturnDate() == null) {
+                record.setReturnDate(LocalDate.now());
+                for (Book book : books) {
+                    if (book.getBookID() == bookID) {
+                        book.setAvailable(true);
+                        break;
+                    }
+                }
+                saveBorrowRecords();
+                saveBooks();
+                break;
+            }
+        }
+    }
+
+    private void saveBorrowRecords() {
+        try {
+            DataStore.saveBorrowRecords(borrowRecords);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveBooks() {
+        try {
+            DataStore.saveBooks(books);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<BorrowRecord> getBorrowRecords() {
+        return borrowRecords;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+}
