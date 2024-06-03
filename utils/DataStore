@@ -1,0 +1,63 @@
+package com.example.utils;
+
+import com.example.models.Book;
+import com.example.models.BorrowRecord;
+import com.example.models.User;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DataStore {
+    private static final String USERS_FILE = "users.ser";
+    private static final String BOOKS_FILE = "books.ser";
+    private static final String RECORDS_FILE = "records.ser";
+
+    // Save Users
+    public static void saveUsers(List<User> users) throws IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(USERS_FILE))) {
+            out.writeObject(users);
+        }
+    }
+
+    // Load Users
+    public static List<User> loadUsers() throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(USERS_FILE))) {
+            return (List<User>) in.readObject();
+        } catch (FileNotFoundException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    // Save Books
+    public static void saveBooks(List<Book> books) throws IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(BOOKS_FILE))) {
+            out.writeObject(books);
+        }
+    }
+
+    // Load Books
+    public static List<Book> loadBooks() throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(BOOKS_FILE))) {
+            return (List<Book>) in.readObject();
+        } catch (FileNotFoundException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    // Save Borrow Records
+    public static void saveBorrowRecords(List<BorrowRecord> records) throws IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(RECORDS_FILE))) {
+            out.writeObject(records);
+        }
+    }
+
+    // Load Borrow Records
+    public static List<BorrowRecord> loadBorrowRecords() throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(RECORDS_FILE))) {
+            return (List<BorrowRecord>) in.readObject();
+        } catch (FileNotFoundException e) {
+            return new ArrayList<>();
+        }
+    }
+}
