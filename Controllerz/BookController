@@ -1,0 +1,53 @@
+package com.example.controllers;
+
+import com.example.models.Book;
+import com.example.utils.DataStore;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class BookController {
+
+    private List<Book> books;
+
+    public BookController() {
+        try {
+            books = DataStore.loadBooks();
+        } catch (IOException | ClassNotFoundException e) {
+            books = new ArrayList<>();
+        }
+    }
+
+    public void addBook(Book book) {
+        books.add(book);
+        saveBooks();
+    }
+
+    public void updateBook(Book book) {
+        for (int i = 0; i < books.size(); i++) {
+            if (books.get(i).getIsbn().equals(book.getIsbn())) {
+                books.set(i, book);
+                break;
+            }
+        }
+        saveBooks();
+    }
+
+    public void deleteBook(String isbn) {
+        books.removeIf(book -> book.getIsbn().equals(isbn));
+        saveBooks();
+    }
+
+    private void saveBooks() {
+        try {
+            DataStore.saveBooks(books);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+}
